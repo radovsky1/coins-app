@@ -1,0 +1,13 @@
+port: "8000"
+
+db:
+  username: "postgres"
+  host: "localhost"
+  port: "5436"
+  dbname: "postgres"
+  sslmode: "disable"
+
+app:
+  name: "Coins API"
+  version: "1.0.0"
+  env: "development"
