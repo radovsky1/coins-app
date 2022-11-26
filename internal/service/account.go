@@ -3,6 +3,7 @@ package service
 import (
 	"coins-app/internal/core"
 	"coins-app/internal/storage"
+	"coins-app/util"
 )
 
 type AccountService struct {
@@ -14,6 +15,9 @@ func NewAccountService(accountRepo storage.Account) *AccountService {
 }
 
 func (s *AccountService) CreateAccount(account core.Account) (int, error) {
+	if !util.IsSupportedCoin(account.Currency) {
+		return 0, core.ErrUnsupportedCurrency
+	}
 	accountId, err := s.AccountRepo.CreateAccount(account)
 	if err != nil {
 		return 0, err

@@ -11,4 +11,5 @@ var (
 	ErrTransferNotFound     = errors.New("transfer not found")
 	ErrAmountMustBePositive = errors.New("amount must be positive")
 	ErrSameAccount          = errors.New("same account")
+	ErrUnsupportedCurrency  = errors.New("unsupported currency")
 )
