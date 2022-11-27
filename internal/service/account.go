@@ -2,16 +2,19 @@ package service
 
 import (
 	"coins-app/internal/core"
+	"coins-app/internal/es"
 	"coins-app/internal/storage"
 	"coins-app/util"
+	"context"
 )
 
 type AccountService struct {
-	AccountRepo storage.Account
+	AccountRepo      storage.Account
+	AccountMsgBroker es.AccountMessageBroker
 }
 
-func NewAccountService(accountRepo storage.Account) *AccountService {
-	return &AccountService{AccountRepo: accountRepo}
+func NewAccountService(accountRepo storage.Account, accountMsgBroker es.AccountMessageBroker) *AccountService {
+	return &AccountService{AccountRepo: accountRepo, AccountMsgBroker: accountMsgBroker}
 }
 
 func (s *AccountService) CreateAccount(account core.Account) (int, error) {
@@ -22,6 +25,9 @@ func (s *AccountService) CreateAccount(account core.Account) (int, error) {
 	if err != nil {
 		return 0, err
 	}
+
+	_ = s.AccountMsgBroker.PublishAccountCreated(context.Background(), account)
+
 	return accountId, nil
 }
 
@@ -46,5 +52,8 @@ func (s *AccountService) UpdateAccount(account core.Account) error {
 	if err != nil {
 		return err
 	}
+
+	_ = s.AccountMsgBroker.PublishAccountUpdated(context.Background(), account)
+
 	return nil
 }
