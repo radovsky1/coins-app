@@ -1,6 +1,23 @@
 version: '3.8'
 
 services:
+  zookeeper:
+    hostname: zookeeper
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "coins:1:1"
+    depends_on:
+      - zookeeper
+
   coins-app:
     build: ./
     command: sh -c "./wait-for-postgres.sh db; /coins-app"
@@ -8,6 +25,8 @@ services:
       - 8000:8000
     depends_on:
       - db
+      - kafka
+      - zookeeper
     environment:
       - DB_PASSWORD=qwerty
 
