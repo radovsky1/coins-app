@@ -11,3 +11,7 @@ app:
   name: "Coins API"
   version: "1.0.0"
   env: "development"
+
+kafka:
+  address: "localhost:9092"
+  topic: "coins"

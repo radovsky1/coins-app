@@ -1,6 +1,8 @@
 package main
 
 import (
+	"coins-app/internal/es"
+	"coins-app/internal/es/kafka"
 	"coins-app/internal/service"
 	"coins-app/internal/service/webapi"
 	"coins-app/internal/storage"
@@ -49,8 +51,13 @@ func main() {
 		APIKey:    os.Getenv("BINANCE_API_KEY"),
 		APISecret: os.Getenv("BINANCE_API_SECRET"),
 	})
+	kafkaWriter := kafka.NewKafkaWriter(kafka.Config{
+		Address: viper.GetString("kafka.address"),
+		Topic:   viper.GetString("kafka.topic"),
+	})
+	msgBroker := es.NewKafkaMessageBroker(kafkaWriter)
 	storages := storage.NewStoragePostgres(db)
-	services := service.NewService(storages, binanceWebAPI)
+	services := service.NewService(storages, binanceWebAPI, msgBroker)
 	handlers := handler.NewHandler(services)
 
 	srv := rest.NewServer(viper.GetString("port"), handlers.InitRoutes())

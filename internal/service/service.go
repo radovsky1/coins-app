@@ -2,6 +2,7 @@ package service
 
 import (
 	"coins-app/internal/core"
+	"coins-app/internal/es"
 	"coins-app/internal/service/webapi"
 	"coins-app/internal/storage"
 )
@@ -38,11 +39,11 @@ type Service struct {
 	Coin
 }
 
-func NewService(storages *storage.Storage, webapi *webapi.BinanceWebAPI) *Service {
+func NewService(storages *storage.Storage, webapi *webapi.BinanceWebAPI, msgBroker *es.MessageBroker) *Service {
 	return &Service{
 		Authorization: NewAuthService(storages.Authorization),
-		Account:       NewAccountService(storages.Account),
-		Transfer:      NewTransferService(storages.Transfer, storages.Account),
+		Account:       NewAccountService(storages.Account, msgBroker.Account),
+		Transfer:      NewTransferService(storages.Transfer, storages.Account, msgBroker.Transfer),
 		Coin:          NewCoinService(webapi),
 	}
 }

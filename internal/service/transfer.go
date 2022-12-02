@@ -2,15 +2,18 @@ package service
 
 import (
 	"coins-app/internal/core"
+	"coins-app/internal/es"
 	"coins-app/internal/storage"
+	"context"
 )
 
 type TransferService struct {
-	TransferRepo storage.Transfer
-	AccountRepo  storage.Account
+	TransferRepo      storage.Transfer
+	AccountRepo       storage.Account
+	TransferMsgBroker es.TransferMessageBroker
 }
 
-func NewTransferService(transferRepo storage.Transfer, accountRepo storage.Account) *TransferService {
+func NewTransferService(transferRepo storage.Transfer, accountRepo storage.Account, transferMsgBroker es.TransferMessageBroker) *TransferService {
 	return &TransferService{TransferRepo: transferRepo, AccountRepo: accountRepo}
 }
 
@@ -22,6 +25,9 @@ func (s *TransferService) CreateTransfer(transfer core.Transfer) (int, error) {
 	if err != nil {
 		return 0, err
 	}
+
+	_ = s.TransferMsgBroker.PublishTransferCreated(context.Background(), transfer)
+
 	return transferId, nil
 }
 
