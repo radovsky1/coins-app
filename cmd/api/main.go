@@ -25,7 +25,11 @@ func main() {
 	}
 
 	if err := godotenv.Load(); err != nil {
-		logrus.Fatal("error loading env variables: ", err.Error())
+		logrus.Error("error loading env variables: ", err.Error())
+	}
+
+	if "" == os.Getenv("DB_PASSWORD") {
+		logrus.Fatalf("error cannot initializing database password")
 	}
 
 	db, err := psql.NewPostgresDB(psql.Config{
@@ -36,6 +40,7 @@ func main() {
 		DBName:   viper.GetString("db.dbname"),
 		SSLMode:  viper.GetString("db.sslmode"),
 	})
+
 	if err != nil {
 		logrus.Fatal("failed to initialize db: ", err.Error())
 	}
