@@ -14,6 +14,18 @@ type getCoinPriceResponse struct {
 	Prices []core.SymbolPrice `json:"prices"`
 }
 
+// @Summary Get Coin Price
+// @Security ApiKeyAuth
+// @Description Get Coin Price
+// @Tags coin
+// @ID get-coin-price
+// @Accept json
+// @Produce json
+// @Param input body getCoinPriceRequest true "Coin"
+// @Success 200 {object} getCoinPriceResponse
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /api/coin/price [get]
 func (h *Handler) getCoinPrice(c *gin.Context) {
 	var request getCoinPriceRequest
 
