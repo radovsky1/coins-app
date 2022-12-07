@@ -1,5 +1,10 @@
 # Simple Coins app
 
+![Coverage](https://img.shields.io/badge/coverage-37%25-brightgreen.svg)
+![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+
 This is a simple backend for coins app. It is a simple REST API that allows you to create, update accounts
 and transfer coin between them.
 
