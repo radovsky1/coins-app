@@ -17,6 +17,18 @@ type createTransferResponse struct {
 	Id int `json:"id"`
 }
 
+// @Summary Create Transfer
+// @Security ApiKeyAuth
+// @Description Create Transfer
+// @Tags transfer
+// @ID create-transfer
+// @Accept json
+// @Produce json
+// @Param input body createTransferRequest true "Transfer"
+// @Success 200 {object} createTransferResponse
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /api/transfers [post]
 func (h *Handler) createTransfer(c *gin.Context) {
 	var request createTransferRequest
 
@@ -64,6 +76,17 @@ func (h *Handler) getTransferById(c *gin.Context) {
 	c.JSON(http.StatusOK, transfer)
 }
 
+// @Summary Get Transfers
+// @Security ApiKeyAuth
+// @Description Get Transfers
+// @Tags transfer
+// @ID get-transfers
+// @Accept json
+// @Produce json
+// @Success 200 {object} []core.Transfer
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /api/transfers [get]
 func (h *Handler) getTransfers(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {

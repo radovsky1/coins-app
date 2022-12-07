@@ -1,0 +1,406 @@
+definitions:
+  core.Account:
+    properties:
+      balance:
+        type: integer
+      currency:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  core.SymbolPrice:
+    properties:
+      price:
+        type: string
+      symbol:
+        type: string
+    type: object
+  core.Transfer:
+    properties:
+      amount:
+        type: integer
+      currency:
+        type: string
+      from_account_id:
+        type: integer
+      to_account_id:
+        type: integer
+    type: object
+  core.User:
+    properties:
+      created_at:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - name
+    - password
+    - username
+    type: object
+  handler.createAccountRequest:
+    properties:
+      currency:
+        type: string
+    required:
+    - currency
+    type: object
+  handler.createAccountResponse:
+    properties:
+      balance:
+        type: integer
+      created_at:
+        type: string
+      currency:
+        type: string
+      id:
+        type: integer
+    type: object
+  handler.createTransferRequest:
+    properties:
+      amount:
+        type: integer
+      currency:
+        type: string
+      from_account_id:
+        type: integer
+      to_account_id:
+        type: integer
+    required:
+    - amount
+    - currency
+    - from_account_id
+    - to_account_id
+    type: object
+  handler.createTransferResponse:
+    properties:
+      id:
+        type: integer
+    type: object
+  handler.errorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  handler.getAccountsResponse:
+    properties:
+      accounts:
+        items:
+          $ref: '#/definitions/core.Account'
+        type: array
+    type: object
+  handler.getCoinPriceRequest:
+    properties:
+      coin:
+        type: string
+    required:
+    - coin
+    type: object
+  handler.getCoinPriceResponse:
+    properties:
+      prices:
+        items:
+          $ref: '#/definitions/core.SymbolPrice'
+        type: array
+    type: object
+  handler.signInRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  handler.signInResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  handler.signUpResponse:
+    properties:
+      id:
+        type: integer
+    type: object
+  handler.updateAccountRequest:
+    properties:
+      balance:
+        type: integer
+      currency:
+        type: string
+    required:
+    - balance
+    - currency
+    type: object
+info:
+  contact: {}
+paths:
+  /api/accounts:
+    get:
+      consumes:
+      - application/json
+      description: Get Accounts
+      operationId: get-accounts
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.getAccountsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Accounts
+      tags:
+      - account
+    post:
+      consumes:
+      - application/json
+      description: Create Account
+      operationId: create-account
+      parameters:
+      - description: Account
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handler.createAccountRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.createAccountResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create Account
+      tags:
+      - account
+  /api/accounts/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update Account
+      operationId: update-account
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Account
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handler.updateAccountRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/core.Account'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Account
+      tags:
+      - account
+  /api/coin/price:
+    get:
+      consumes:
+      - application/json
+      description: Get Coin Price
+      operationId: get-coin-price
+      parameters:
+      - description: Coin
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handler.getCoinPriceRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.getCoinPriceResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Coin Price
+      tags:
+      - coin
+  /api/transfers:
+    get:
+      consumes:
+      - application/json
+      description: Get Transfers
+      operationId: get-transfers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/core.Transfer'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Transfers
+      tags:
+      - transfer
+    post:
+      consumes:
+      - application/json
+      description: Create Transfer
+      operationId: create-transfer
+      parameters:
+      - description: Transfer
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handler.createTransferRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.createTransferResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create Transfer
+      tags:
+      - transfer
+  /auth/sign-in:
+    post:
+      consumes:
+      - application/json
+      description: Sign in user
+      operationId: sign-in
+      parameters:
+      - description: User
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/handler.signInRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.signInResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: Sign In
+      tags:
+      - auth
+  /auth/sign-up:
+    post:
+      consumes:
+      - application/json
+      description: Create new user
+      operationId: create-user
+      parameters:
+      - description: User
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/core.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.signUpResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: Sign Up
+      tags:
+      - auth
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

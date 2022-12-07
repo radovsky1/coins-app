@@ -19,6 +19,17 @@ import (
 	"syscall"
 )
 
+// @title: Coins App API
+// @version: 1.0.0
+// @description: Simple API for coins app
+
+// @host: localhost:8000
+// @BasePath: /
+
+// @securityDefinitions.apiKey ApiKeyAuth
+// @in header
+// @name Authorization
+
 func main() {
 	logrus.SetFormatter(&logrus.JSONFormatter{})
 

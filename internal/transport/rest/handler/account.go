@@ -19,6 +19,18 @@ type createAccountResponse struct {
 	CreatedAt string `json:"created_at"`
 }
 
+// @Summary Create Account
+// @Security ApiKeyAuth
+// @Description Create Account
+// @Tags account
+// @ID create-account
+// @Accept json
+// @Produce json
+// @Param input body createAccountRequest true "Account"
+// @Success 200 {object} createAccountResponse
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /api/accounts [post]
 func (h *Handler) createAccount(c *gin.Context) {
 	var request createAccountRequest
 
@@ -89,6 +101,17 @@ type getAccountsResponse struct {
 	Accounts []core.Account `json:"accounts"`
 }
 
+// @Summary Get Accounts
+// @Security ApiKeyAuth
+// @Description Get Accounts
+// @Tags account
+// @ID get-accounts
+// @Accept json
+// @Produce json
+// @Success 200 {object} getAccountsResponse
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /api/accounts [get]
 func (h *Handler) getAccounts(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -112,6 +135,19 @@ type updateAccountRequest struct {
 	Currency string `json:"currency" binding:"required"`
 }
 
+// @Summary Update Account
+// @Security ApiKeyAuth
+// @Description Update Account
+// @Tags account
+// @ID update-account
+// @Accept json
+// @Produce json
+// @Param id path int true "Account ID"
+// @Param input body updateAccountRequest true "Account"
+// @Success 200 {object} core.Account
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /api/accounts/{id} [put]
 func (h *Handler) updateAccount(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
